@@ -7,13 +7,18 @@ import { Howl } from 'howler';
   styleUrls: ['./metronome.component.css']
 })
 export class MetronomeComponent implements OnInit, OnDestroy {
-  bpm: number = 120; // Valor inicial del BPM
+  bpm: number = 120; // initial value of the bpm
   metronomeRunning: boolean = false;
-  interval: any; // Variable para guardar el setInterval
+  interval: any; // Variable that saves the setInterval
   tickSound: Howl;
+  tickSoundFirst: Howl;
+  denominator: number = 3;
 
   constructor() {
     this.tickSound = new Howl({
+      src: ['assets/hihat_click.mp3']
+    });
+    this.tickSoundFirst = new Howl({
       src: ['assets/hihat_click.mp3']
     });
   }
@@ -25,6 +30,7 @@ export class MetronomeComponent implements OnInit, OnDestroy {
     this.stopMetronome();
   }
 
+  //metode for the play/stop button
   toggleMetronome() {
     if (this.metronomeRunning) {
       this.stopMetronome();
@@ -33,17 +39,35 @@ export class MetronomeComponent implements OnInit, OnDestroy {
     }
   }
 
+  //metode that starts the metronome
   startMetronome() {
+    let counter = 1;
     const intervalMs = (60 / this.bpm) * 1000;
     this.interval = setInterval(() => {
-      // Aquí puedes emitir un sonido o ejecutar una acción a intervalos regulares
-      this.tickSound.play();
-      console.log('Tick'); // Ejemplo de salida a consola
+
+      if (counter >this.denominator){
+        counter = 1;
+      }
+      // execute a sound every interval
+      switch(counter){
+        case 1:
+          this.tickSoundFirst.play();
+          console.log('TickFirst '+counter); // Ejemplo de salida a consola
+          counter ++;
+          break;
+
+        default:
+          this.tickSound.play();
+          console.log('Tick '+counter); // Ejemplo de salida a consola
+          counter ++;
+          break;
+      }
     }, intervalMs);
 
     this.metronomeRunning = true;
   }
 
+  //metode that stops the metronome
   stopMetronome() {
     clearInterval(this.interval);
     this.metronomeRunning = false;
