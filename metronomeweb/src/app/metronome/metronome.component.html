@@ -1,0 +1,12 @@
+<div class="metronomo">
+    <h2>Metronomo Web</h2>
+    
+    <div class="controls">
+      <button (click)="toggleMetronome()">
+        {{ metronomeRunning ? 'Pausar' : 'Iniciar' }}
+      </button>
+      <label>Velocidad (BPM):</label>
+     <input type="number" [(ngModel)]="bpm" [disabled]="metronomeRunning">
+    </div>
+  </div>
+  
